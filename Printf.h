@@ -1,4 +1,9 @@
+#ifndef PRINTF
+#define PRINTF
 
+
+//Dustin Soodak
+//dsoodak google mail
 
 
 //Instead of #include <cstdio>,  use #include "Printf.h" and #define printf Printf.
@@ -11,7 +16,17 @@
 
 extern void Printf(const char *pcFullString, ...);
 
-//Ex: Printf("%0.3f\r\n",15.125);Printf("%0.3x\r\n",15.125);Printf("%0.3b\r\n",15.125);
+//Ex:
+/*
+#include "Printf.h" //or #include <cstdio>
+#define printf Printf
+int main(){
+    printf("%0.3f\r\n",15.125);
+    printf("%0.3x\r\n",15.125);
+    printf("%0.3b\r\n",15.125);
+}
+*/
 
-//Dustin Soodak
-//dsoodak google mail
+
+#endif // PRINTF
+
