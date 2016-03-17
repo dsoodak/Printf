@@ -3,7 +3,7 @@
 #include "SerialIO.h"//or just define PutChar()
 
 //Dustin Soodak
-//dsoodak google mail
+//dsoodak yahoo mail
 
 #define Def_Mode 0
 #define Percent_Sign_Found 1
@@ -180,13 +180,11 @@ void Printf(const char *pcFullString, ...)
                 case Hex_Upper_Case_Mode:
                 case Binary_Mode:
                     if(DecimalPlaces>0)
-                        Mode=Float_Mode;
-                    if(Mode==Float_Mode)
                         ValueF = va_arg(vaArg, double);//compiler converts float to double in variable argument functions
                     else
                         Value = va_arg(vaArg, unsigned int);//used for cases besides float
                     //if signed and negative, make positive (unless float: then do what is in new handler below)
-                    if(Mode==Float_Mode){ //'%f'
+                    if(DecimalPlaces>0){ //'%f'
                         //add one extra virtual decimal place(so we can round)
                         for(i=0;i<DecimalPlaces+1;i++)
                             ValueF*=Base;
@@ -216,37 +214,30 @@ void Printf(const char *pcFullString, ...)
                         IsNegative=0;
                     }
                     i=sizeof(buffer)-1;
-                    if(Mode==Hex_Upper_Case_Mode){
-                        while(Value){
-                            buffer[i]=IntToHexUpperCase(Value%Base);
+                    while(Value){
+                        //add decimal point if and when appropriate
+                        //This section will not appear in above section  "Mode==Hex_Upper_Case_Mode"
+                        if(sizeof(buffer)-1-i==DecimalPlaces && DecimalPlaces>0){ //only called once in loop
+                            buffer[i]='.';
+                            i--;
+                        }
+                        if(i>=0){
+                            if(Mode==Hex_Upper_Case_Mode)
+                                buffer[i]=IntToHexUpperCase(Value%Base);
+                            else
+                                buffer[i]=IntToHexLowerCase(Value%Base);
                             Value/=Base;
                             i--;
                         }
                     }
-                    else{
-                        while(Value){
-                            //add decimal point if and when appropriate
-                            //This section will not appear in above section  "Mode==Hex_Upper_Case_Mode"
-                            if(sizeof(buffer)-1-i==DecimalPlaces && DecimalPlaces>0){ //only called once in loop
-                                buffer[i]='.';
-                                i--;
-                            }
-                            if(i>=0){
-                                buffer[i]=IntToHexLowerCase(Value%Base);
-                                Value/=Base;
-                                i--;
-                            }
+                    while(sizeof(buffer)-1-i<=DecimalPlaces){//if there should be a decimal point but not yet printed, this will print it after addign zeroes if necessary.
+                        if(sizeof(buffer)-1-i==DecimalPlaces && DecimalPlaces>0){	//only called once in loop
+                            buffer[i]='.';
+                            i--;
                         }
-                        while(sizeof(buffer)-1-i<=DecimalPlaces){//if there should be a decimal point but not yet printed, this will print it after addign zeroes if necessary.
-
-                            if(sizeof(buffer)-1-i==DecimalPlaces && DecimalPlaces>0){	//only called once in loop
-                                buffer[i]='.';
-                                i--;
-                            }
-                            if(i>=0){				//should fill in zeroes after decimal point (printed first) and one before decimal point (printed just before exiting loop)
-                                buffer[i]='0';
-                                i--;
-                            }
+                        if(i>=0){				//should fill in zeroes after decimal point (printed first) and one before decimal point (printed just before exiting loop)
+                            buffer[i]='0';
+                            i--;
                         }
                     }
                     if(IsNegative){
