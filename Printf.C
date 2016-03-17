@@ -3,7 +3,7 @@
 #include "SerialIO.h"//or just define PutChar()
 
 //Dustin Soodak
-//dsoodak yahoo mail
+//dsoodak yahoo mail (put "github" in subject)
 
 #define Def_Mode 0
 #define Percent_Sign_Found 1
@@ -32,7 +32,6 @@
 char printf_printing=0;
 int PrintfCollisions=0;//for when running on a chip with multiple interrupts that use the same serial port
 
-int ShowSpecialCharacters=1;
 //Dustin Soodak
 void Printf(const char *pcFullString, ...)
 {
@@ -42,7 +41,7 @@ void Printf(const char *pcFullString, ...)
     char FillCharacter='0',FillLength=0,DecimalPlaces=0,Base=2,IsNegative,Mode;
     int StringLength=0;
     char *strValue=0;
-    char buffer[16];
+    char buffer[20];
     char EscChar=0;
     const char *pcString=pcFullString;
     va_list vaArg;
